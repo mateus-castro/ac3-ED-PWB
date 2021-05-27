@@ -1,10 +1,11 @@
-package br.com.bandtec.ac3edpweb;
+package br.com.bandtec.ac3edpweb.utils;
 
 import br.com.bandtec.ac3edpweb.models.Requisicao;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static br.com.bandtec.ac3edpweb.models.Requisicao.filaReq;
 import static br.com.bandtec.ac3edpweb.controllers.PaisController.listaReq;
@@ -14,7 +15,8 @@ public class Agendamento {
 
     @Scheduled(cron = "*/30 * * * * *")
     public void scheduleAtv(){
-        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String now = LocalDateTime.now().format(format);
         if (!filaReq.isEmpty()) {
             Requisicao req = filaReq.poll();
             listaReq.add(req);

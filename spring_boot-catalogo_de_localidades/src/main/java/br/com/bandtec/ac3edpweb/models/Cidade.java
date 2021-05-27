@@ -18,6 +18,18 @@ public class Cidade {
     @ManyToOne
     private Pais pais;
 
+    public Cidade(Integer idCidade, String nomeCidade, Double pibCidade, Boolean isGrande, Pais pais) {
+        this.idCidade = idCidade;
+        this.nomeCidade = nomeCidade;
+        this.pibCidade = pibCidade;
+        this.isGrande = isGrande;
+        this.pais = pais;
+    }
+
+    public Cidade(){
+
+    }
+
     public Integer getIdCidade() {
         return idCidade;
     }

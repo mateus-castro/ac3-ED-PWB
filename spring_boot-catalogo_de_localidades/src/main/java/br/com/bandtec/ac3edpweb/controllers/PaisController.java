@@ -1,6 +1,6 @@
 package br.com.bandtec.ac3edpweb.controllers;
 
-import br.com.bandtec.ac3edpweb.PilhaObjeto;
+import br.com.bandtec.ac3edpweb.utils.PilhaObjeto;
 import br.com.bandtec.ac3edpweb.models.Operacao;
 import br.com.bandtec.ac3edpweb.models.Pais;
 import br.com.bandtec.ac3edpweb.models.Requisicao;
@@ -19,8 +19,9 @@ import static br.com.bandtec.ac3edpweb.models.Requisicao.filaReq;
 @RestController
 @RequestMapping("/pais")
 public class PaisController {
+
     @Autowired
-    private PaisRepository repoPais;
+    public PaisRepository repoPais;
 
     private PilhaObjeto<Operacao> pilhaOp = new PilhaObjeto<>(10);
     public static List<Requisicao> listaReq = new ArrayList<>(10);

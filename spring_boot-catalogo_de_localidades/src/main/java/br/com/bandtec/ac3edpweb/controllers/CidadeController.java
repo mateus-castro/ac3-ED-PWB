@@ -1,6 +1,6 @@
 package br.com.bandtec.ac3edpweb.controllers;
 
-import br.com.bandtec.ac3edpweb.PilhaObjeto;
+import br.com.bandtec.ac3edpweb.utils.PilhaObjeto;
 import br.com.bandtec.ac3edpweb.models.Cidade;
 import br.com.bandtec.ac3edpweb.models.Operacao;
 import br.com.bandtec.ac3edpweb.models.Requisicao;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static br.com.bandtec.ac3edpweb.models.Requisicao.filaReq;
 
@@ -21,7 +20,7 @@ import static br.com.bandtec.ac3edpweb.models.Requisicao.filaReq;
 public class CidadeController {
 
     @Autowired
-    public CidadeRepository repoCidade;
+    private CidadeRepository repoCidade;
 
     @Autowired
     private PaisRepository repoPais;
@@ -88,4 +87,5 @@ public class CidadeController {
             return ResponseEntity.status(400).body("Não há operações para serem desfeitas");
         }
     }
+
 }

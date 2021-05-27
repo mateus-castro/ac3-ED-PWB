@@ -1,0 +1,6 @@
+00CATALOGO27-05-2021 17:52:1601
+02001Brasil
+03010Sao Paulo                     6,71001
+02002Mexico
+03012Ciudad del Mexico             5,20002
+010000000004

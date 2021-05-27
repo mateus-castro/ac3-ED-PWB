@@ -1,6 +1,6 @@
 package br.com.bandtec.ac3edpweb.models;
 
-import br.com.bandtec.ac3edpweb.FilaObjeto;
+import br.com.bandtec.ac3edpweb.utils.FilaObjeto;
 import br.com.bandtec.ac3edpweb.repositories.CidadeRepository;
 import br.com.bandtec.ac3edpweb.repositories.PaisRepository;
 

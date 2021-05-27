@@ -1,4 +1,4 @@
-package br.com.bandtec.ac3edpweb;
+package br.com.bandtec.ac3edpweb.utils;
 
 public class PilhaObjeto<Wow> {
     private Integer topo;

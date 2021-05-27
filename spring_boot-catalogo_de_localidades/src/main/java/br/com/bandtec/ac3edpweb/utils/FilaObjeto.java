@@ -1,4 +1,4 @@
-package br.com.bandtec.ac3edpweb;
+package br.com.bandtec.ac3edpweb.utils;
 
 // Representa uma fila de String
 public class FilaObjeto<Wow> {
