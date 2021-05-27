@@ -30,4 +30,11 @@ public class Pais {
         this.nomePais = nomePais;
     }
 
+    @Override
+    public String toString() {
+        return "Pais{" +
+                "\n\tidPais: " + idPais +
+                ", \n\tnomePais: '" + nomePais + '\'' +
+                "\n}";
+    }
 }

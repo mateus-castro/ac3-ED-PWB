@@ -44,4 +44,12 @@ public class Operacao {
     public void setPaisOp(Pais paisOp) {
         this.paisOp = paisOp;
     }
+
+    public Cidade getCidadeOp() {
+        return cidadeOp;
+    }
+
+    public void setCidadeOp(Cidade cidadeOp) {
+        this.cidadeOp = cidadeOp;
+    }
 }

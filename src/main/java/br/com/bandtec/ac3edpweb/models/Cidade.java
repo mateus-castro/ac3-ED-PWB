@@ -9,14 +9,14 @@ public class Cidade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idCidade;
 
-    @ManyToOne
-    private Pais pais;
-
     private String nomeCidade;
 
     private Double pibCidade;
 
     private Boolean isGrande;
+
+    @ManyToOne
+    private Pais pais;
 
     public Integer getIdCidade() {
         return idCidade;
@@ -56,5 +56,16 @@ public class Cidade {
 
     public void setGrande(Boolean grande) {
         isGrande = grande;
+    }
+
+    @Override
+    public String toString() {
+        return "Cidade{" +
+                "\n\tidCidade: " + idCidade +
+                ", \n\tnomeCidade: '" + nomeCidade + '\'' +
+                ", \n\tpibCidade: " + pibCidade +
+                ", \n\tisGrande: " + isGrande +
+                ", \n\tpais: " + pais.toString() +
+                "\n}\n";
     }
 }

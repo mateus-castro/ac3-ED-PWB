@@ -1,21 +1,20 @@
 package br.com.bandtec.ac3edpweb.controllers;
 
-import br.com.bandtec.ac3edpweb.FilaObjeto;
 import br.com.bandtec.ac3edpweb.PilhaObjeto;
 import br.com.bandtec.ac3edpweb.models.Operacao;
 import br.com.bandtec.ac3edpweb.models.Pais;
 import br.com.bandtec.ac3edpweb.models.Requisicao;
-import br.com.bandtec.ac3edpweb.repositories.CidadeRepository;
 import br.com.bandtec.ac3edpweb.repositories.PaisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
+
+import static br.com.bandtec.ac3edpweb.models.Requisicao.filaReq;
 
 @RestController
 @RequestMapping("/pais")
@@ -24,7 +23,7 @@ public class PaisController {
     private PaisRepository repoPais;
 
     private PilhaObjeto<Operacao> pilhaOp = new PilhaObjeto<>(10);
-    private FilaObjeto<Requisicao> filaReq = new FilaObjeto<>(10);
+    public static List<Requisicao> listaReq = new ArrayList<>(10);
 
     @GetMapping
     public ResponseEntity getPais(){
@@ -34,12 +33,43 @@ public class PaisController {
     @PostMapping
     public ResponseEntity postPais(@RequestBody Pais novoPais){
         if(!repoPais.existsPaisByNomePais(novoPais.getNomePais())) {
-            repoPais.save(novoPais);
-            pilhaOp.push(new Operacao("post", novoPais));
-            return ResponseEntity.status(201).build();
+            if(novoPais.getIdPais() == null) {
+                String protocolo = UUID.randomUUID().toString();
+                LocalDateTime previsao = LocalDateTime.now().plusSeconds(60);
+                filaReq.insert(new Requisicao(protocolo, previsao, novoPais, repoPais));
+                pilhaOp.push(new Operacao("post", novoPais));
+                return ResponseEntity.status(201)
+                        .header("protocolo", protocolo)
+                        .header("previsao", previsao.toString())
+                        .build();
+            }
+            return ResponseEntity.status(400).body("Pode deixar, não precisa colocar o ID na mão." +
+                    " Tire-o pra poder inserir no banco :D");
         } else{
             return ResponseEntity.status(400).body("Pais já registrado!");
         }
+    }
+
+    @PutMapping
+    public ResponseEntity putPais(@RequestBody Pais novoPais){
+        if(repoPais.existsById(novoPais.getIdPais())){
+            repoPais.save(novoPais);
+            pilhaOp.push(new Operacao("put", novoPais));
+            return ResponseEntity.status(200).body("País atualizado com sucesso.");
+        }
+        return ResponseEntity.status(400).body("País não encontrado.");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deletePais(@PathVariable int id){
+        if(repoPais.existsById(id)){
+            Pais novoPais = repoPais.findById(id).get();
+            repoPais.delete(novoPais);
+
+            pilhaOp.push(new Operacao("delete", novoPais));
+            return ResponseEntity.status(200).body("País deletado com sucesso!");
+        }
+        return ResponseEntity.status(400).body("País não encontrado.");
     }
 
     @GetMapping("/desfaz")
@@ -50,6 +80,8 @@ public class PaisController {
                 repoPais.delete(op.getPaisOp());
             } else if(op.getTipoOp().equals("delete")){
                 repoPais.save(op.getPaisOp());
+            } else {
+                repoPais.save(op.getPaisOp());
             }
             return ResponseEntity.status(200).body("Operação desfeita.");
         } else{
@@ -57,58 +89,4 @@ public class PaisController {
         }
     }
 
-    @PostMapping("/req")
-    public ResponseEntity novaRequisicao() {
-        // sorteio de um UUID
-        String protocolo = UUID.randomUUID().toString();
-        // gerando um momento futuro para daqui a 16 segundos
-        LocalDateTime previsao = LocalDateTime.now().plusSeconds(21);
-        Thread requisita = new Thread(() -> {
-            try {
-                Thread.sleep(20_000);
-                Integer numero = ThreadLocalRandom.current().nextInt(0, 100);
-
-                Requisicao novaReq = new Requisicao(protocolo, previsao);
-                filaReq.insert(novaReq);
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        requisita.start();
-
-        return ResponseEntity
-                .status(202)
-                .header("protocolo", protocolo)
-                .header("previsao", previsao.toString())
-                .build();
-    }
-
-    @GetMapping("/req")
-    public ResponseEntity getRequisicao(){
-        ArrayList<Requisicao> novaReq = new ArrayList<>(filaReq.getTamanho());
-        do{
-            novaReq.add(filaReq.poll());
-        }
-        while(!filaReq.isEmpty());
-
-        return ResponseEntity.status(400).body(novaReq);
-    }
-
-//    @GetMapping("/req/{protocolo}")
-//    public ResponseEntity getRequisicao(@PathVariable String protocolo){
-//        do{
-//            Requisicao novaReq = filaReq.poll();
-//            if(novaReq.getProtocolo().equals(protocolo)){
-//                return ResponseEntity.status(200).body(novaReq);
-//            }
-//        }
-//        while(!filaReq.isEmpty());
-//
-//        return ResponseEntity.status(400).body("Requisição não foi encontrada.");
-//    }
-
-//    public void scheduler(){
-//
-//    }
 }
