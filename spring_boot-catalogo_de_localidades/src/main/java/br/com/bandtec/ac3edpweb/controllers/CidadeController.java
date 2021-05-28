@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static br.com.bandtec.ac3edpweb.models.Requisicao.filaReq;
@@ -25,10 +27,14 @@ public class CidadeController {
     @Autowired
     private PaisRepository repoPais;
 
-    private PilhaObjeto<Operacao> pilhaOp = new PilhaObjeto<>(3);
+    public PilhaObjeto<Operacao> pilhaOp = new PilhaObjeto<>(3);
 
     @GetMapping
     public ResponseEntity getCidade(){
+        List lista = new ArrayList<>(repoCidade.findAll());
+        if (lista.isEmpty()){
+            return ResponseEntity.status(204).build();
+        }
         return ResponseEntity.status(200).body(repoCidade.findAll());
     }
 
@@ -54,11 +60,12 @@ public class CidadeController {
         if(repoCidade.existsById(novaCidade.getIdCidade())){
             repoCidade.save(novaCidade);
             pilhaOp.push(new Operacao("put", novaCidade));
-            return ResponseEntity.status(200).body("Cidade atualizada com sucesso.");
+            return ResponseEntity.status(201).body("Cidade atualizada com sucesso.");
         }
         return ResponseEntity.status(400).body("Cidade não encontrada.");
 
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity deleteCidade(@PathVariable int id){
         if(repoCidade.existsById(id)){

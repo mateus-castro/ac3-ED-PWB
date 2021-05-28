@@ -1,7 +1,10 @@
 package br.com.bandtec.ac3edpweb.models;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
+@Valid
 @Entity
 public class Cidade {
 
@@ -9,12 +12,16 @@ public class Cidade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idCidade;
 
+    @NotBlank
     private String nomeCidade;
 
+    @NotBlank
     private Double pibCidade;
 
+    @NotBlank
     private Boolean isGrande;
 
+    @NotBlank
     @ManyToOne
     private Pais pais;
 

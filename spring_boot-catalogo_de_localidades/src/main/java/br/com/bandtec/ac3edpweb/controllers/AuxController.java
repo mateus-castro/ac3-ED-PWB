@@ -25,20 +25,17 @@ public class AuxController {
         for(Requisicao p : listaReq){
             if(p.getProtocolo().equals(protocolo)){
                 listaReq.remove(p);
-                return ResponseEntity.status(200).body("Requisição POST " + p.getProtocolo()
-                        + "concluída, e será deletada desta lista." + "\n" + p.getCidade().toString());
+                return ResponseEntity.status(200).body("Requisição POST concluída, e será deletada desta lista.");
             }
         }
 
-        return ResponseEntity.status(400).body("Protocolo " + protocolo
-                + " não encontrado, ou já foi consultado antes.");
+        return ResponseEntity.status(400).body("Protocolo não encontrado, ou já foi consultado antes.");
     }
 
-    @PostMapping("/arquivo")
-    public ResponseEntity postArquivo(){
+    @PostMapping("/arquivo/{nome}")
+    public ResponseEntity postArquivo(@PathVariable String nome){
         try{
-            repoCidade.findAll();
-            leArquivo("teste.txt", repoCidade, repoPais);
+            leArquivo(nome, repoCidade, repoPais);
             return ResponseEntity.status(201).body("Arquivo foi processado :D");
         } catch(Exception e){
             System.out.println(e);

@@ -21,6 +21,10 @@ public class Operacao {
         this.cidadeOp = cidadeOp;
     }
 
+    public Operacao(){
+
+    }
+
     public Integer getIdOp() {
         return idOp;
     }

@@ -28,7 +28,10 @@ public class PaisController {
 
     @GetMapping
     public ResponseEntity getPais(){
-        return ResponseEntity.status(200).body(repoPais.findAll());
+        List lista = new ArrayList<>(repoPais.findAll());
+        if (lista.isEmpty()){
+            return ResponseEntity.status(204).build();
+        }return ResponseEntity.status(200).body(repoPais.findAll());
     }
 
     @PostMapping
@@ -71,23 +74,6 @@ public class PaisController {
             return ResponseEntity.status(200).body("País deletado com sucesso!");
         }
         return ResponseEntity.status(400).body("País não encontrado.");
-    }
-
-    @GetMapping("/desfaz")
-    public ResponseEntity desfazerPais(){
-        if(pilhaOp.getTopo() >= 0){
-            Operacao op = pilhaOp.pop();
-            if(op.getTipoOp().equals("post")){
-                repoPais.delete(op.getPaisOp());
-            } else if(op.getTipoOp().equals("delete")){
-                repoPais.save(op.getPaisOp());
-            } else {
-                repoPais.save(op.getPaisOp());
-            }
-            return ResponseEntity.status(200).body("Operação desfeita.");
-        } else{
-            return ResponseEntity.status(400).body("Não há operações para serem desfeitas");
-        }
     }
 
 }
